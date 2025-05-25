@@ -22,7 +22,7 @@
       id: Date.now(),
       timestamp: new Date().toLocaleTimeString(),
       power: (Math.random() * (0.3 - 0.1) + 0.1).toFixed(2),
-      exa: powerCollected,
+      exa: powerCollected.value.toFixed(3),
       freq: (Math.random() * (13 - 0.5) + 0.5).toFixed(2),
       stimuli: (Math.random() * (2.8 - 1.7) + 1.7).toFixed(2)
     };
@@ -36,7 +36,7 @@
 
 <template>
   <multiple
-    @audio-started="isActive = true"
+    @audio-started="isActive = true; powerCollected = 0"
     @audio-ended="increaseUser"
     @power-updated="power => powerCollected += power"
   />
@@ -74,6 +74,8 @@ ul {
   display: flex;
   flex-direction: column;
   font-size: 12px;
+  max-height: 200px;
+  overflow: scroll;
 
   li {
     display: flex;

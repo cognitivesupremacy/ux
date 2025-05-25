@@ -98,6 +98,7 @@ async function playSeamlessSequence(introUrl, centralUrl, outroUrl) {
       powerInterval = null;
     }
     emit("audio-ended");
+    firstStart.value = true;
   };
 }
 
@@ -112,9 +113,9 @@ async function toggleAudio() {
   if (firstStart.value) {
     await audioCtx.resume();
     await playSeamlessSequence(
-      "/audio/intro.mp3",
-      "/audio/outro.mp3",
-      "/audio/outro.mp3"
+      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4",
+      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4",
+      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4"
     );
     firstStart.value = false;
   } else if (audioCtx.state === "running") {
