@@ -1,8 +1,14 @@
 <script setup>
 import { ref } from "vue";
 
+const emit = defineEmits(["audio-started", "audio-ended", "power-updated"]);
+
+const random = (min, max) => Math.random() * (max - min) + min;
+
 let audioCtx = new AudioContext();
 let firstStart = ref(true);
+
+let powerInterval = null; // Variabile globale per l'id dell'intervallo
 
 let filter = ref(2000);
 let delay = ref(0.1);
@@ -32,10 +38,21 @@ function disconnectAndCleanup() {
     try { globalDelayNode.disconnect(); } catch {}
     globalDelayNode = null;
   }
+
+  if (powerInterval) {
+    clearInterval(powerInterval);
+    powerInterval = null;
+  }
 }
 
 async function playSeamlessSequence(introUrl, centralUrl, outroUrl) {
   disconnectAndCleanup();
+
+  emit("audio-started");
+  
+  powerInterval = setInterval(() => {
+    emit("power-updated", Number(random(0, 0.03).toFixed(3)));
+  }, 1000*random(1, 3));
 
   // Crea filtro e delay globali
   globalFilterNode = audioCtx.createBiquadFilter();
@@ -74,6 +91,14 @@ async function playSeamlessSequence(introUrl, centralUrl, outroUrl) {
   outroSource.connect(globalFilterNode);
   outroSource.start(now + introBuffer.duration + centralBuffer.duration);
   sources.push(outroSource);
+
+  outroSource.onended = () => {
+    if (powerInterval) {
+      clearInterval(powerInterval);
+      powerInterval = null;
+    }
+    emit("audio-ended");
+  };
 }
 
 function updateFilter() {
