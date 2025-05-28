@@ -113,9 +113,9 @@ async function toggleAudio() {
   if (firstStart.value) {
     await audioCtx.resume();
     await playSeamlessSequence(
-      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4",
-      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4",
-      "/oneshots/AP2_Pluck_Deep_In_The_Night_F.mp4"
+      "/audio/intro.mp3",
+      "/nplus/bb_A_loop.wav",
+      "/audio/outro.mp3"
     );
     firstStart.value = false;
   } else if (audioCtx.state === "running") {
