@@ -54,7 +54,7 @@ function updateDelay() {
 async function toggleAudio() {
   if (firstStart.value) {
     await audioCtx.resume();
-    await playTrack("/audio/intro.mp3"); // usa la tua traccia di test
+    await playTrack("/nplus/scan_V3.mp3");
     firstStart.value = false;
   } else if (audioCtx.state === "running") {
     await audioCtx.suspend();

@@ -52,7 +52,7 @@ async function playSeamlessSequence(introUrl, centralUrl, outroUrl) {
   
   powerInterval = setInterval(() => {
     emit("power-updated", Number(random(0, 0.03).toFixed(3)));
-  }, 1000*random(1, 3));
+  }, 1000 * random(1, 3));
 
   // Crea filtro e delay globali
   globalFilterNode = audioCtx.createBiquadFilter();
@@ -65,41 +65,57 @@ async function playSeamlessSequence(introUrl, centralUrl, outroUrl) {
   globalFilterNode.connect(globalDelayNode);
   globalDelayNode.connect(audioCtx.destination);
 
-  const introBuffer = await loadAudioBuffer(introUrl);
+  let now = audioCtx.currentTime;
+  let offset = 0;
+
+  // Intro (se presente)
+  if (introUrl) {
+    const introBuffer = await loadAudioBuffer(introUrl);
+    const introSource = audioCtx.createBufferSource();
+    introSource.buffer = introBuffer;
+    introSource.connect(globalFilterNode);
+    introSource.start(now);
+    sources.push(introSource);
+    offset += introBuffer.duration;
+  }
+
+  // Centrale (obbligatorio)
   const centralBuffer = await loadAudioBuffer(centralUrl);
-  const outroBuffer = await loadAudioBuffer(outroUrl);
-
-  const now = audioCtx.currentTime;
-
-  // Intro
-  const introSource = audioCtx.createBufferSource();
-  introSource.buffer = introBuffer;
-  introSource.connect(globalFilterNode);
-  introSource.start(now);
-  sources.push(introSource);
-
-  // Centrale
   const centralSource = audioCtx.createBufferSource();
   centralSource.buffer = centralBuffer;
   centralSource.connect(globalFilterNode);
-  centralSource.start(now + introBuffer.duration);
+  centralSource.start(now + offset);
   sources.push(centralSource);
+  offset += centralBuffer.duration;
 
-  // Outro
-  const outroSource = audioCtx.createBufferSource();
-  outroSource.buffer = outroBuffer;
-  outroSource.connect(globalFilterNode);
-  outroSource.start(now + introBuffer.duration + centralBuffer.duration);
-  sources.push(outroSource);
+  // Outro (se presente)
+  if (outroUrl) {
+    const outroBuffer = await loadAudioBuffer(outroUrl);
+    const outroSource = audioCtx.createBufferSource();
+    outroSource.buffer = outroBuffer;
+    outroSource.connect(globalFilterNode);
+    outroSource.start(now + offset);
+    sources.push(outroSource);
 
-  outroSource.onended = () => {
-    if (powerInterval) {
-      clearInterval(powerInterval);
-      powerInterval = null;
-    }
-    emit("audio-ended");
-    firstStart.value = true;
-  };
+    outroSource.onended = () => {
+      if (powerInterval) {
+        clearInterval(powerInterval);
+        powerInterval = null;
+      }
+      emit("audio-ended");
+      firstStart.value = true;
+    };
+  } else {
+    // Se non c'è outro, termina quando finisce la centrale
+    centralSource.onended = () => {
+      if (powerInterval) {
+        clearInterval(powerInterval);
+        powerInterval = null;
+      }
+      emit("audio-ended");
+      firstStart.value = true;
+    };
+  }
 }
 
 function updateFilter() {
@@ -113,9 +129,9 @@ async function toggleAudio() {
   if (firstStart.value) {
     await audioCtx.resume();
     await playSeamlessSequence(
-      "/audio/intro.mp3",
-      "/nplus/bb_A_loop.wav",
-      "/audio/outro.mp3"
+      null,
+      "/nplus/scan_v3.mp3",
+      null
     );
     firstStart.value = false;
   } else if (audioCtx.state === "running") {
