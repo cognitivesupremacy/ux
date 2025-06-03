@@ -1,7 +1,14 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const emit = defineEmits(["audio-started", "audio-ended", "power-updated"]);
+
+const props = defineProps({
+  audioStatus: {
+    type: Boolean,
+    default: false,
+  },
+});
 
 const random = (min, max) => Math.random() * (max - min) + min;
 
@@ -140,14 +147,29 @@ async function toggleAudio() {
     audioCtx.resume();
   }
 }
+
+const showControls = ref(false);
+
+
+watch(
+  () => props.audioStatus,
+  (newValue) => {
+    if (newValue) {
+      toggleAudio();
+    } else {
+      disconnectAndCleanup();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
   <div style="display: flex; gap: 2rem; flex-direction: column">
-    <span @click="toggleAudio" style="cursor: pointer">
+    <!-- <span @click="toggleAudio" style="cursor: pointer">
       Play/Pausa Sequenza
-    </span>
-    <div>
+    </span> -->
+    <div v-if="showControls">
       <label>
         Filtro (Hz):
         <input

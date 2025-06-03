@@ -6,15 +6,27 @@
   import multiple from './components/multiple.vue'
   import ui from './components/ui.vue'
 
+  // import {Niivue} from '@niivue/niivue'
+  // const nv = new Niivue()
+
+  // const volumeList = [
+  //   {
+  //     url: "/mni152.nii.gz",
+  //   }
+  // ]
+
   const isActive  = ref(false);
 
   const users = ref([]);
 
   let powerCollected = ref(0); 
 
-  onMounted(() => {
+  onMounted(async () => {
     const saved = localStorage.getItem("users");
     users.value = saved ? JSON.parse(saved) : [];
+
+    // nv.attachTo('gl')
+    // await nv.loadVolumes(volumeList)
   });
 
   const increaseUser = () => {
@@ -32,6 +44,8 @@
 
     isActive.value = false
   };
+
+  const audio = ref(false)
 </script>
 
 <template>
@@ -39,62 +53,102 @@
     @audio-started="isActive = true; powerCollected = 0"
     @audio-ended="increaseUser"
     @power-updated="power => powerCollected += power"
+    :audioStatus="audio"
   />
   <ui
+    @toggleAudio="audio = !audio"
     :isActive="isActive"
     :powerCollected="Number(users.reduce((sum, user) => sum + Number(user.exa), 0).toFixed(2))"
     :currentPower="Number(powerCollected)"
+    :id="Number(users.length) + 1"
   />
   <div v-if="!isActive">
     <ul>
       <li>
         <strong>Session</strong>
-        <strong>Timestamp</strong>
-        <strong>Computational Power Contribution</strong>
-        <strong>Exa FLOPs extracted</strong>
-        <strong>Average Neural Frequency</strong>
-        <strong>Processed Stimuli</strong>
+        <strong>TIME</strong>
+        
+        <strong>ExaFLOPs</strong>
+
+        <strong style="white-space: nowrap; width: 101px;">Computational Power Contribution</strong>
+
+        <strong></strong>
+        <strong></strong>
+        <strong></strong>
+        <strong></strong>
+        <!-- <strong>Average Neural Frequency</strong> -->
+        <!-- <strong>Processed Stimuli</strong> -->
       </li>
       <li v-for="(user, i) in users.slice().reverse()" :key="user.id">
         <span>{{ users.length - i }}</span>
         <span>{{ user.timestamp }}</span>
-        <span>+ {{ user.power }}%</span>
+        
         <span>{{ Number(user.exa).toFixed(3) }}</span>
-        <span>{{ user.freq }}Hz</span>
-        <span>{{ user.stimuli }}M</span>
+        
+        <span>+ {{ user.power }}%</span>
+
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <!-- <span>{{ user.freq }}Hz</span> -->
+        <!-- <span>{{ user.stimuli }}M</span> -->
       </li>
     </ul>
   </div>
+
+  <div v-else class="video-container">
+    <video src="/loop.mp4" loop muted playsinline autoplay></video>
+    <video src="/loop.mp4" loop muted playsinline autoplay></video>
+  </div>
+  <!-- <div style="height: -webkit-fill-available; overflow: hidden;" :style="isActive ? 'display:block' : 'display:none'">
+    <canvas id="gl" style="width: 100vw;"></canvas>
+  </div> -->
 </template>
 
 <style lang="scss" scoped>
-ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  max-height: 200px;
-  overflow: scroll;
-
-  li {
+  .video-container {
     display: flex;
-    justify-content: space-between;
-    padding: 0.25rem;
-    // border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: webkit-fill-available;
 
-    span {
-      flex: 1;
-      text-align: center;
-      width: 100%;
-      text-align: left;
-    }
-
-    strong {
-      font-weight: 300;
-      width: 100%;
-      text-align: left;
+    video {
+      width: 50%;
+      height: 100%;
     }
   }
-}
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    overflow: hidden;
+    margin: 0;
+    height: 280px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 0.25rem;
+      height: 12px;
+      text-transform: uppercase;
+      width: 100%;
+      // border-bottom: 1px solid #ccc;
+
+      span {
+        flex: 1;
+        text-align: center;
+        width: 100%;
+        text-align: left;
+      }
+
+      strong {
+        font-weight: 300;
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
 </style>
