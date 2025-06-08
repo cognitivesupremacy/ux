@@ -5,7 +5,35 @@
   import simple from './components/simple.vue'
   import multiple from './components/multiple.vue'
   import ui from './components/ui.vue'
+  
+  import { supabase } from './utils/supabase'
+  const todos = ref([])
 
+  async function getTodos() {
+    const { data } = await supabase.from('sonar').select()
+    todos.value = data
+  }
+
+  async function addEntry(user) {
+    const { data, error } = await supabase
+      .from('sonar')
+      .insert([{
+        neural_stram: user.power + '%',
+        session: users.value.length,
+        time: user.timestamp,
+        date: user.date
+      }])
+
+    if (error) {
+      console.error('Errore inserimento:', error.message)
+    } else {
+      console.log('Dati inseriti in Supabase:', data)
+    }
+  }
+
+  onMounted(() => {
+    getTodos()
+  })
   // import {Niivue} from '@niivue/niivue'
   // const nv = new Niivue()
 
@@ -32,6 +60,7 @@
   const increaseUser = () => {
     const newUser = {
       id: Date.now(),
+      date: new Date().toLocaleDateString('it-IT'),
       timestamp: new Date().toLocaleTimeString(),
       power: (Math.random() * (0.3 - 0.1) + 0.1).toFixed(2),
       exa: powerCollected.value.toFixed(3),
@@ -41,6 +70,8 @@
     users.value.push(newUser);
     localStorage.setItem("users", JSON.stringify(users.value));
     console.log("Audio ended, user added:", newUser);
+
+    addEntry(newUser)
 
     isActive.value = false
   };
@@ -65,41 +96,23 @@
   <div v-if="!isActive">
     <ul>
       <li>
+        <strong>Sonar+D</strong>
         <strong>Session</strong>
         <strong>TIME</strong>
-        
-        <strong>ExaFLOPs</strong>
-
-        <strong style="white-space: nowrap; width: 101px;">Computational Power Contribution</strong>
-
-        <strong></strong>
-        <strong></strong>
-        <strong></strong>
-        <strong></strong>
-        <!-- <strong>Average Neural Frequency</strong> -->
-        <!-- <strong>Processed Stimuli</strong> -->
+        <strong>Neural Processing Stream</strong>
       </li>
       <li v-for="(user, i) in users.slice().reverse()" :key="user.id">
+        <span>{{ user.date }}</span>
         <span>{{ users.length - i }}</span>
         <span>{{ user.timestamp }}</span>
-        
-        <span>{{ Number(user.exa).toFixed(3) }}</span>
-        
         <span>+ {{ user.power }}%</span>
-
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <!-- <span>{{ user.freq }}Hz</span> -->
-        <!-- <span>{{ user.stimuli }}M</span> -->
       </li>
     </ul>
   </div>
 
   <div v-else class="video-container">
-    <video src="/brain_z.mp4" loop muted playsinline autoplay></video>
     <video src="/brain_x.mp4" loop muted playsinline autoplay></video>
+    <video src="/brain_z.mp4" loop muted playsinline autoplay></video>
   </div>
   <!-- <div style="height: -webkit-fill-available; overflow: hidden;" :style="isActive ? 'display:block' : 'display:none'">
     <canvas id="gl" style="width: 100vw;"></canvas>

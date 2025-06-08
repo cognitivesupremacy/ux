@@ -1,0 +1,8 @@
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = "https://vvxdugranihmsbmrfdpf.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2eGR1Z3JhbmlobXNibXJmZHBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkzOTI5ODQsImV4cCI6MjA2NDk2ODk4NH0.a8DNkCkBW5QB8Jt4TozzB46lI0LymOsQAmSysuhrPMI";
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
+        
