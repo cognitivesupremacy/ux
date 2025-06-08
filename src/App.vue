@@ -98,8 +98,8 @@
   </div>
 
   <div v-else class="video-container">
-    <video src="/loop.mp4" loop muted playsinline autoplay></video>
-    <video src="/loop.mp4" loop muted playsinline autoplay></video>
+    <video src="/brain_z.mp4" loop muted playsinline autoplay></video>
+    <video src="/brain_x.mp4" loop muted playsinline autoplay></video>
   </div>
   <!-- <div style="height: -webkit-fill-available; overflow: hidden;" :style="isActive ? 'display:block' : 'display:none'">
     <canvas id="gl" style="width: 100vw;"></canvas>
@@ -127,6 +127,7 @@
     overflow: hidden;
     margin: 0;
     height: 280px;
+    color: white;
 
     li {
       display: flex;

@@ -148,6 +148,7 @@ defineProps({
       height: 14px;
       padding: 0;
       margin: 0;
+      cursor: none;
     }
   }
 
