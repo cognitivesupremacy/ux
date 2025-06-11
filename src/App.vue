@@ -57,12 +57,17 @@
     // await nv.loadVolumes(volumeList)
   });
 
+  const endedScreen = ref(false)
+  const percentage = ref(null)
+
   const increaseUser = () => {
+    percentage.value = (Math.random() * (0.3 - 0.1) + 0.1).toFixed(2)
+
     const newUser = {
       id: Date.now(),
       date: new Date().toLocaleDateString('it-IT'),
       timestamp: new Date().toLocaleTimeString(),
-      power: (Math.random() * (0.3 - 0.1) + 0.1).toFixed(2),
+      power: percentage.value,
       exa: powerCollected.value.toFixed(3),
       freq: (Math.random() * (13 - 0.5) + 0.5).toFixed(2),
       stimuli: (Math.random() * (2.8 - 1.7) + 1.7).toFixed(2)
@@ -72,7 +77,11 @@
     console.log("Audio ended, user added:", newUser);
 
     addEntry(newUser)
-
+    
+    endedScreen.value = true;
+    setTimeout(() => {
+      endedScreen.value = false;
+    }, 3000);
     isActive.value = false
   };
 
@@ -93,6 +102,11 @@
     :currentPower="Number(powerCollected)"
     :id="Number(users.length) + 1"
   />
+
+  <div class="ended-screen" v-if="endedScreen">
+    NEURAL PROCESSING STREAM {{ percentage }} %
+  </div>
+
   <div v-if="!isActive">
     <ul>
       <li>
@@ -121,6 +135,7 @@
 
 <style lang="scss" scoped>
   .video-container {
+    padding-top: 20px;
     display: flex;
     width: 100%;
     height: webkit-fill-available;
@@ -164,6 +179,34 @@
         width: 100%;
         text-align: left;
       }
+    }
+  }
+
+  .ended-screen {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    animation: flash-bg 0.5s steps(1, end) infinite;
+    transition: color 0.2s;
+  }
+
+  @keyframes flash-bg {
+    0% {
+      color: white;
+    }
+    50% {
+      color: black;
+    }
+    100% {
+      color: white;
     }
   }
 </style>
