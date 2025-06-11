@@ -1,5 +1,20 @@
+@font-face {
+  font-family: "SuisseR";
+  src: url("./suisse/SuisseIntl-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "SuisseM";
+  src: url("./suisse/SuisseIntl-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'SuisseR';
   line-height: 1.5;
   font-weight: 400;
 
@@ -69,7 +84,7 @@ button:focus-visible {
   max-height: calc(100vh - 1rem);
   overflow: hidden;
   margin: 0 auto;
-  padding: .5rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
