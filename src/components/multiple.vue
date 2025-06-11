@@ -137,7 +137,7 @@ async function toggleAudio() {
     await audioCtx.resume();
     await playSeamlessSequence(
       null,
-      "/nplus/scan_v5.mp3", 
+      "/nplus/scan_v6.1.mp3", 
       null
     );
     firstStart.value = false;

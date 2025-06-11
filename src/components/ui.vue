@@ -1,4 +1,8 @@
 <script setup>
+
+import randomWords from './randomWords.vue'
+
+
 defineProps({
   isActive: {
     type: Boolean,
@@ -17,6 +21,8 @@ defineProps({
     default: 0,
   }
 });
+
+const loaderBar = false
 </script>
 
 <template>
@@ -26,29 +32,31 @@ defineProps({
     </div>
 
     <div v-if="!isActive">
-      <span>{{ (powerCollected/90*100).toFixed(2) + '%' }}</span>
-      <span>ORGANON™ requirement </span>
+      <!-- <span>{{ (powerCollected/90*100).toFixed(2) + '%' }}</span> -->
+      <!-- <span>ORGANON™ requirement </span> -->
+      <randomWords/>
+
     </div>
     <div v-else>
-      <span>SESSION {{ id }}</span>
-      <span>{{ currentPower.toFixed(3) }} exaFLOPs</span>
+      <!-- <span>SESSION {{ id }}</span> -->
+       <span>NEURAL PROCESSING STREAM {{ currentPower.toFixed(3) }} exaFLOPs</span>
+      <!-- <span>{{ currentPower.toFixed(3) }} exaFLOPs</span> -->
     </div>
 
     
-    <div v-if="!isActive">
+    <!-- <div v-if="!isActive">
       <span>cumulated computational <br> power extracted</span>
-      <!-- <span>{{ powerCollected.toFixed(3) }} exaFLOPs</span> -->
     </div>
     <div v-else>
       <span>Current computational power extracted</span>
-    </div>
+    </div> -->
 
     <div @click="$emit('toggleAudio')">
-      <button>{{ isActive ? 'STOP BRAIN MINING' : 'START BRAIN MINING' }}</button>
+      <button>{{ isActive ? '[STOP BRAIN MINING]' : '[START BRAIN MINING]' }}</button>
     </div>
 
   </header>
-  <main v-if="!isActive">
+  <main v-if="!isActive && loaderBar">
     <div class="loader-values">
       <span>0%</span>
       <span>10%</span>
@@ -89,7 +97,7 @@ defineProps({
 <style lang="scss" scoped>
   header {
     display: grid;
-    grid-template-columns: 2fr 2fr 2fr 2fr;
+    grid-template-columns: 2fr 4fr 2fr;
     justify-content: space-between;
     align-items: start;
     justify-content: start;
@@ -137,18 +145,23 @@ defineProps({
       flex-direction: column;
       font-size: 12px;
       text-align: left;
+      height: 100%;
+      justify-content: center;
     }
 
     button {
       width: 100%;
       line-height: 1;
-      background: white;
+      background: black;
       border-radius: 0;
-      color: black;
+      color: white;
+      text-align: left;
       height: 14px;
       padding: 0;
       margin: 0;
       cursor: none;
+      height: 100%;
+      justify-content: center;
     }
   }
 

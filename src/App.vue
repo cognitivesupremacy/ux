@@ -5,7 +5,7 @@
   import simple from './components/simple.vue'
   import multiple from './components/multiple.vue'
   import ui from './components/ui.vue'
-  
+
   import { supabase } from './utils/supabase'
   const todos = ref([])
 
@@ -139,13 +139,14 @@
     font-size: 12px;
     overflow: hidden;
     margin: 0;
-    height: 280px;
+    height: 380px;
     color: white;
+    padding-top: 20px;
 
     li {
       display: flex;
       justify-content: space-between;
-      padding: 0 0.25rem;
+      padding: 0;
       height: 12px;
       text-transform: uppercase;
       width: 100%;
