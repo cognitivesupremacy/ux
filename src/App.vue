@@ -135,14 +135,16 @@
 
 <style lang="scss" scoped>
   .video-container {
-    padding-top: 20px;
+    margin-top: 20px;
     display: flex;
+    overflow: hidden;
     width: 100%;
-    height: webkit-fill-available;
+    height: 370px;
+    align-items: center;
 
     video {
       width: 50%;
-      height: 100%;
+      height: 400px;
     }
   }
 
