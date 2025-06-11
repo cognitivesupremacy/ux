@@ -86,6 +86,9 @@ button:focus-visible {
   margin: 0 auto;
   padding: 0.5rem;
   text-align: center;
+
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
 @media (prefers-color-scheme: light) {

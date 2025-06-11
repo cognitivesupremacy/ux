@@ -103,7 +103,7 @@
       </li>
       <li v-for="(user, i) in users.slice().reverse()" :key="user.id">
         <span>{{ user.date }}</span>
-        <span>{{ users.length - i }}</span>
+        <span>{{ (users.length - i).toString().padStart(4, '0') }}</span>
         <span>{{ user.timestamp }}</span>
         <span>+ {{ user.power }}%</span>
       </li>
