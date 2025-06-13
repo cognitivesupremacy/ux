@@ -14,6 +14,11 @@
     todos.value = data
   }
 
+  function convertToISODate(dateStr) {
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month}-${day}`; // "2025-06-13"
+  }
+
   async function addEntry(user) {
     const { data, error } = await supabase
       .from('sonar')
@@ -21,7 +26,7 @@
         neural_stram: user.power + '%',
         session: users.value.length,
         time: user.timestamp,
-        date: user.date
+        date: convertToISODate(user.date)
       }])
 
     if (error) {
